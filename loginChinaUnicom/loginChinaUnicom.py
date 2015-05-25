@@ -18,7 +18,7 @@ sys.setdefaultencoding('utf-8')
 class loginChinaUnicom(object):
 
     def __init__(self):
-        self.url = 'http://202.106.46.37/login.do?callback=jQuery171021991612273268402_1432177819223&username=*********&password=*********&passwordType=6&wlanuserip=&userOpenAddress=sd&checkbox=0&basname=&setUserOnline=&sap=&macAddr=78%253A31%253Ac1%253Ac3%253A50%253Aa6&bandMacAuth=1&isMacAuth=1&basPushUrl=http%253A%252F%252F202.106.46.37%252F&passwordkey=&_=1432177852160'
+        self.url = 'http://202.106.46.37/login.do?callback=jQuery171021991612273268402_1432177819223&username=***********&password=****&passwordType=6&wlanuserip=&userOpenAddress=sd&checkbox=0&basname=&setUserOnline=&sap=&macAddr=78%253A31%253Ac1%253Ac3%253A50%253Aa6&bandMacAuth=1&isMacAuth=1&basPushUrl=http%253A%252F%252F202.106.46.37%252F&passwordkey=&_=1432177852160'
         self.refUrl = 'http://202.106.46.37/index.do'
 
 
@@ -36,7 +36,7 @@ class loginChinaUnicom(object):
 
 
     def pingChinaUnicom(self):
-        response = commands.getstatusoutput('ping -c 4 -t 4 202.106.46.37')
+        response = commands.getstatusoutput('ping -c 1 -t 1 202.106.46.37')
         pattern = re.compile(r', (\d{1,3}\.\d)%')
         match = pattern.search(str(response))
         return match.group(1)
@@ -44,11 +44,13 @@ class loginChinaUnicom(object):
 
     def hasIP(self):
         response = commands.getstatusoutput('ifconfig en0')
-        pattern = re.compile(r'(\d\d)\d\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+        pattern = re.compile(r'(\d\d\d\.\d{1,3})\.\d{1,3}\.\d{1,3}')
         match = pattern.search(str(response))
-        if match.group(1) == '11':
+        if match == None:
+            return 3
+        elif match.group(1) == '111.200':
             return 1
-        elif match.group(1) == '19':
+        elif match.group(1) == '169.254':
             return 0
         else :
             return 3
@@ -76,18 +78,21 @@ class loginChinaUnicom(object):
 
 
     def doIt(self):
+        count = 1
         while True:
+            count += 1
             statusOfIP = self.hasIP()
             if statusOfIP == 3:
                 time.sleep(1)
                 continue
-            elif statusOfIP == 0:
+            elif statusOfIP == 0 or count %5 == 0:
                 commands.getstatusoutput('networksetup -setairportpower en0 Off')
                 commands.getstatusoutput('networksetup -setairportpower en0 On')
-                time.sleep(1)
+                time.sleep(2)
                 continue
             elif statusOfIP == 1:
-                break
+                if self.pingChinaUnicom() == '0.0':
+                    break
         self.login()
 
 
