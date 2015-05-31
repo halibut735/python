@@ -1,4 +1,9 @@
 #!/usr/bin/python
+'''
+    powered by halibut735
+    email : halibut735@163.com
+    from :IIE@UCAS
+'''
 import sys
 import urllib
 import urllib2
@@ -101,7 +106,7 @@ class loginChinaUnicom(object):
                 continue
             elif statusOfIP == 0 or count %5 == 0:
                 '''
-                executing the next line needs root previlege!!!
+                    executing the next line needs root previlege!!!
                 '''
                 #self.switch()
                 commands.getstatusoutput('networksetup -setairportpower en0 Off')
