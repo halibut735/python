@@ -100,7 +100,10 @@ class loginChinaUnicom(object):
                 time.sleep(1)
                 continue
             elif statusOfIP == 0 or count %5 == 0:
-                self.switch()
+                '''
+                executing the next line needs root previlege!!!
+                '''
+                #self.switch()
                 commands.getstatusoutput('networksetup -setairportpower en0 Off')
                 commands.getstatusoutput('networksetup -setairportpower en0 On')
                 time.sleep(2)
